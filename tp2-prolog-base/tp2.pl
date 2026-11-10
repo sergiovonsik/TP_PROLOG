@@ -40,9 +40,9 @@ coordenadaEnRango(M, (Fila, Columna)) :- tamaño(M, FilasM, ColumnasM),
 % - (+T, -Coordenada, +V): Instancia en Coordenada todas las coordenadas del tablero T que tienen el valor V.
 % - (+T, -Coordenada, -V): Instancia en Coordenada todas las coordenadas del tablero T y en V sus correspondientes valores.
 % Precondición: esMatriz(Tablero), coordenadaEnRango(Tablero, Coordenada).
-valorEnCoordenada(T, (nFila,nColumna), V) :-
-  nth1(nFila, T, Fila),
-  nth1(nColumna, Fila, V).
+valorEnCoordenada(T, (NFila,NColumna), V) :-
+  nth1(NFila, T, Fila),
+  nth1(NColumna, Fila, V).
 
 % coordenada(+Tablero, -Coordenada)
 % Instancia en Coordenada todas las coordenadas del tablero Tablero.
@@ -72,8 +72,7 @@ coordenadasDistintas((X, Y), (W, Z)):- X =\= W, Y =\= Z.
 
 
 %crearMatriz(-Tablero, +Filas, +Columnas)
-crearMatriz([], 0, _).
-crearMatriz([X|[]], 1, Columnas) :- length(X, Columnas).
+crearMatriz([], 0, _). 
 crearMatriz([X|Xs], Filas, Columnas) :- 
   length(X, Columnas), 
   Nfilas is Filas - 1,
@@ -82,7 +81,7 @@ crearMatriz([X|Xs], Filas, Columnas) :-
 %cambiarValorEnCoordenada(+T, -TActualizada, +Coordenada, +Color)
 cambiarValorEnCoordenada([], TActualizada, Coordenada, Color).
 cambiarValorEnCoordenada(T,TActualizada, (X,Y),Valor) :- 
-  tamaño(T,F,C), L1 is X-1, length(M11, L1),
+  L1 is X-1, length(M11, L1),
   append(M11, [XS1 | M12], T), L2 is Y-1, length(M21, L2),
   append(M21,[_|M22],XS1), append(M21, [Valor | M22], XS2),
   append(M11, [XS2 | M12], TActualizada).
@@ -240,10 +239,10 @@ jugadaPosible(T, (I, J)) :-
 
 % jugarPosición(+TableroInicial, +Coordenada, -TableroResultante)
 % Precondición: esMatriz(TableroInicial), coordenadaEnRango(TableroInicial, Coordenada), libre(TableroInicial, Coordenada).
-jugarPosición(Tablero, Coord, TableroRes) :- 
-  coloresPredominantes(Tablero, Coord, Colores, Coords),
+jugarPosición(Tablero, Coord, TableroRes) :-
+  jugadaPosible(Tablero, Coord),
+  coloresPredominantes(Tablero, Coord, _, Coords),
   tableroConPosicionesLiberadas(Tablero, Coords, TableroRes).
-
 % ----------------
 % Ejercicio 5.b)
 % ----------------

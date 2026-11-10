@@ -250,7 +250,10 @@ jugarPosición(Tablero, Coord, TableroRes) :-
 % jugarPosiciones(+TableroInicial, +Jugadas, -TableroResultante)
 % Precondición: esMatriz(TableroInicial).
 % Precondición: para cada Coordenada en Jugadas: coordenadaEnRango(TableroInicial, Coordenada).
-jugarPosiciones(_, _, _) :- completar("Ejercicio 5.b").
+jugarPosiciones(TInit, [], TInit).
+jugarPosiciones(TInit, [J|JS], TFinal) :-
+  jugarPosición(TInit, J, TInt),
+  jugarPosiciones(TInt, JS, TFinal).
 
 % jugarNaive(+TableroInicial, -TableroFinal)
 % Precondición: esMatriz(TableroInicial).
@@ -267,7 +270,16 @@ jugarNaive(T, TF) :-
 
 % jugadasNaive(+Tablero, -Jugadas)
 % Precondición: esMatriz(Tablero).
-jugadasNaive(_, _) :- completar("Ejercicio 6.b").
+jugadasNaive(T, []) :- 
+  not(jugadaPosible(T, _)).
+
+jugadasNaive(T, [J|JS]) :-
+  jugadaPosible(T, J),
+  jugarPosición(T, J, TI),
+  jugadasNaive(TI, JS).
+
+
+
 
 % ----------------
 % Ejercicio 7.a)
@@ -276,7 +288,14 @@ jugadasNaive(_, _) :- completar("Ejercicio 6.b").
 % victoriaConJugadas(+Tablero, +Jugadas).
 % Precondición: esMatriz(Tablero).
 % Precondición: para cada Coordenada en Jugadas: coordenadaEnRango(Tablero, Coordenada).
-victoriaConJugadas(_, _) :- completar("Ejercicio 7.a").
+victoriaConJugadas(Ti, J) :- 
+  jugarPosiciones(Ti, J, Tf), 
+  not(
+    ( 
+    valorEnCoordenada(Tf, _, Valor),
+    Valor \== libre
+    )
+  ).
 
 % ----------------
 % Ejercicio 7.b)
@@ -284,7 +303,9 @@ victoriaConJugadas(_, _) :- completar("Ejercicio 7.a").
 
 % juegoNaiveVictorioso(+Tablero, -Jugadas)
 % Precondición: esMatriz(Tablero).
-juegoNaiveVictorioso(_, _) :- completar("Ejercicio 7.b").
+juegoNaiveVictorioso(T, JS) :-
+  jugadasNaive(T, JS),
+  victoriaConJugadas(T, JS).
 
 % ----------------
 % Ejercicio 7.c)
@@ -292,7 +313,16 @@ juegoNaiveVictorioso(_, _) :- completar("Ejercicio 7.b").
 
 % mejorJuegoNaive(+Tablero, -Jugadas)
 % Precondición: esMatriz(Tablero).
-mejorJuegoNaive(_, _) :- completar("Ejercicio 7.c").
+mejorJuegoNaive(T, JS) :- 
+  juegoNaiveVictorioso(T, JS)
+  length(JS, LJS),
+  not(
+    (
+      juegoNaiveVictorioso(T, RS)
+      length(RS, LRS),
+      LJS > LRS
+    )
+  ).
 
 % ----------------
 % Ejercicio 8 - OPCIONAL

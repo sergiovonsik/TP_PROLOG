@@ -314,11 +314,11 @@ juegoNaiveVictorioso(T, JS) :-
 % mejorJuegoNaive(+Tablero, -Jugadas)
 % Precondición: esMatriz(Tablero).
 mejorJuegoNaive(T, JS) :- 
-  juegoNaiveVictorioso(T, JS)
+  juegoNaiveVictorioso(T, JS),
   length(JS, LJS),
   not(
     (
-      juegoNaiveVictorioso(T, RS)
+      juegoNaiveVictorioso(T, RS),
       length(RS, LRS),
       LJS > LRS
     )
